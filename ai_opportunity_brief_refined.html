@@ -1,0 +1,258 @@
+
+<style>
+  .root { padding: 1.5rem 0; font-size: 14px; color: var(--color-text-primary); }
+  .doc-header { margin-bottom: 20px; }
+  .doc-title { font-size: 20px; font-weight: 500; margin: 0 0 4px; }
+  .doc-meta { font-size: 12px; color: var(--color-text-tertiary); font-family: var(--font-mono); }
+  .section { margin-bottom: 18px; }
+  .sec-num { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 4px; }
+  .sec-title { font-size: 14px; font-weight: 500; margin-bottom: 10px; color: var(--color-text-primary); }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .two-col { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; }
+  .body { font-size: 12.5px; line-height: 1.75; color: var(--color-text-secondary); }
+  .body-primary { font-size: 12.5px; line-height: 1.75; color: var(--color-text-primary); }
+  .change-row { display: flex; gap: 8px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .change-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .before { background: #FCEBEB; border-radius: var(--border-radius-md); padding: 8px 10px; flex: 1; font-size: 11.5px; color: #791F1F; line-height: 1.6; }
+  .after { background: #EAF3DE; border-radius: var(--border-radius-md); padding: 8px 10px; flex: 1; font-size: 11.5px; color: #27500A; line-height: 1.6; }
+  .arrow { font-size: 14px; color: var(--color-text-tertiary); align-self: center; flex-shrink: 0; }
+  .tag-before { font-size: 9px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #A32D2D; margin-bottom: 3px; }
+  .tag-after { font-size: 9px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #3B6D11; margin-bottom: 3px; }
+  .field-row { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 12px; }
+  .field-row:last-child { border-bottom: none; }
+  .field-label { min-width: 110px; font-weight: 500; font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+  .field-val { color: var(--color-text-primary); flex: 1; line-height: 1.65; }
+  .pill { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 500; margin-right: 4px; }
+  .p-green { background: #EAF3DE; color: #3B6D11; }
+  .p-amber { background: #FAEEDA; color: #854F0B; }
+  .p-blue { background: #E6F1FB; color: #185FA5; }
+  .p-red { background: #FCEBEB; color: #A32D2D; }
+  .p-gray { background: #F1EFE8; color: #5F5E5A; }
+  .scope-item { display: flex; gap: 8px; align-items: flex-start; padding: 5px 0; font-size: 12px; }
+  .scope-dot-yes { width: 8px; height: 8px; border-radius: 50%; background: #2D9E6B; flex-shrink: 0; margin-top: 4px; }
+  .scope-dot-no { width: 8px; height: 8px; border-radius: 50%; background: #D64045; flex-shrink: 0; margin-top: 4px; }
+  .crit-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 9px 12px; margin-bottom: 7px; }
+  .crit-label { font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-tertiary); margin-bottom: 3px; }
+  .crit-val { font-size: 12.5px; color: var(--color-text-primary); line-height: 1.6; }
+  .crit-note { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; font-style: italic; }
+  .open-q { display: flex; gap: 10px; padding: 7px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 12px; }
+  .open-q:last-child { border-bottom: none; }
+  .q-num { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); min-width: 18px; }
+  .q-text { color: var(--color-text-primary); flex: 1; line-height: 1.6; }
+  .q-why { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 20px 0; }
+  .insight { font-size: 11.5px; padding: 9px 12px; border-radius: var(--border-radius-md); line-height: 1.6; margin-top: 8px; }
+  .ins-amber { background: #FAEEDA; color: #633806; }
+  .ins-blue { background: #E6F1FB; color: #0C447C; }
+  .ins-green { background: #EAF3DE; color: #27500A; }
+  .section-header { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 6px 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .sh-num { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .sh-title { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); }
+</style>
+
+<div class="root">
+
+  <div class="doc-header">
+    <div class="doc-title">AI Opportunity Brief — Refined</div>
+    <div class="doc-meta">Product: Jira Ticket Finder & Summariser · Author: Sanket · 22 April 2026 · v2</div>
+  </div>
+
+  <div class="divider" style="margin-top:8px"></div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="sh-num">1</div>
+      <div class="sh-title">User problem</div>
+    </div>
+    <div class="card">
+      <div class="change-row">
+        <div style="flex:1">
+          <div class="tag-before">Your version</div>
+          <div class="before">User is manually searching over Jira by reading descriptions to check what has been done and finding similar tickets where resolution is mentioned.</div>
+        </div>
+        <div class="arrow">→</div>
+        <div style="flex:1">
+          <div class="tag-after">Refined</div>
+          <div class="after">Support managers and engineers scan 20–30k Jira tickets daily to triage issues, understand current status, and find similar resolved tickets for reference. Reading full descriptions manually takes 30–40 min per session. The pain is not just reading — it is context-switching: a user must hold one ticket's detail in memory while searching for a related one. Success = a manager can triage the top 80 tickets of the day and surface 5 related tickets per issue in under 5 minutes, with no ticket opened.</div>
+        </div>
+      </div>
+      <div class="insight ins-blue">Why this matters: your original version described the task but not the time cost or the specific user action that defines success. The module asks "what does success look like for them?" — that answer needs to be concrete and measurable, not directional.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="sh-num">2</div>
+      <div class="sh-title">AI fit assessment</div>
+    </div>
+    <div class="card">
+      <div class="field-row">
+        <div class="field-label">Data availability</div>
+        <div class="field-val">
+          <span class="pill p-amber">Partially</span>
+          <div class="body" style="margin-top:4px">Raw ticket data exists (30k tickets). However, an <em>eval dataset</em> — 100–200 tickets with human-labelled "correct" summaries and verified related-ticket mappings — does not exist yet and must be created before building begins. Without it, "90% accuracy" cannot be measured. This is the most urgent pre-build task.</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Error tolerance</div>
+        <div class="field-val">
+          <span class="pill p-amber">Inconvenience → Time loss</span>
+          <div class="body" style="margin-top:4px">Wrong summaries waste engineer time (they must open the ticket anyway). Wrong related-ticket mappings mean missed context on resolution paths. Neither is a financial or safety risk — but repeated errors cause tool abandonment, which is the real failure mode. The cost of wrong output is trust loss, not direct harm.</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Action reversibility</div>
+        <div class="field-val">
+          <span class="pill p-green">Yes</span>
+          <div class="body" style="margin-top:4px">The pipeline only reads and writes summaries. It does not modify any ticket, assign ownership, or send notifications. Wrong outputs can be regenerated by correcting the prompt or re-running the pipeline. No irreversible actions exist in this system.</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Volume</div>
+        <div class="field-val">
+          <span class="pill p-green">Yes</span>
+          <div class="body" style="margin-top:4px">480 summaries per daily run (80 primary + 400 related). At 20–30k total tickets, manual triage is not feasible. Volume clearly justifies automation.</div>
+        </div>
+      </div>
+    </div>
+    <div class="insight ins-amber">Fix applied: "Partially" on data availability is more honest than "Yes" — you have the raw data but not the eval set. The module specifically calls out that eval data must exist before you can claim a threshold. You cannot say "90% accuracy" without first defining what correct looks like in a labelled dataset.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="sh-num">3</div>
+      <div class="sh-title">AI archetype</div>
+    </div>
+    <div class="card">
+      <div class="field-row">
+        <div class="field-label">Archetype</div>
+        <div class="field-val"><span class="pill p-green">Pipeline</span></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label">Rationale</div>
+        <div class="field-val">
+          <div class="body-primary">AI is a processing step with no real-time user interaction at runtime. Structured ticket data goes in; structured summaries and related-ticket mappings come out, feeding a navigation dashboard that humans browse.</div>
+          <div class="insight ins-amber" style="margin-top:6px">Your original rationale ("not fully automated, part of the ecosystem") is close but technically describes Autopilot, not Pipeline. The defining Pipeline characteristic is: no human in the loop at runtime. The output feeds a system — a dashboard — and humans interact with that system, not with the AI directly. That one sentence changes how you spec everything downstream.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="sh-num">4</div>
+      <div class="sh-title">Scope boundary</div>
+    </div>
+    <div class="card">
+      <div class="change-row">
+        <div style="flex:1">
+          <div class="tag-before">Your version — critical error</div>
+          <div class="before">Will do: Summarise Jira tickets<br><br>Will NOT do: similarity search for tickets based on summary</div>
+        </div>
+        <div class="arrow">→</div>
+        <div style="flex:1">
+          <div class="tag-after">Refined</div>
+          <div class="after">
+            <strong style="font-weight:500">Will do:</strong><br>
+            · Read ticket fields (body, priority, queue, type, tags) and compress to 15–20 word summary<br>
+            · Use shared tags to identify 5 related tickets per primary ticket<br>
+            · Output structured record per ticket (ID, summary, word count, related IDs)<br><br>
+            <strong style="font-weight:500">Will NOT do:</strong><br>
+            · Select which 80 tickets are "top tickets of the day" (upstream job)<br>
+            · Assign, escalate, close or modify any ticket field<br>
+            · Send notifications or emails<br>
+            · Infer or add facts not present in the ticket
+          </div>
+        </div>
+      </div>
+      <div class="insight ins-amber">Your original scope had a logical error: "similarity search" was listed under Will NOT do — but finding related tickets IS the core job of this system (the 80×5 = 400 related summaries). This must be in the Will Do list. What it will NOT do is modify tickets or make autonomous decisions.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="sh-num">5</div>
+      <div class="sh-title">Probabilistic success definition</div>
+    </div>
+    <div class="card">
+      <div class="change-row" style="margin-bottom:12px">
+        <div style="flex:1">
+          <div class="tag-before">Your version — not testable</div>
+          <div class="before">"90% correct summary with threshold of 5%"<br><br>Most important failure: mapping incorrect tickets</div>
+        </div>
+        <div class="arrow">→</div>
+        <div style="flex:1">
+          <div class="tag-after">Refined — 3-part format from module</div>
+          <div class="after">Three criteria, each with metric + threshold + condition.</div>
+        </div>
+      </div>
+
+      <div class="crit-box">
+        <div class="crit-label">Criterion 1 — Normal inputs</div>
+        <div class="crit-val">Summary quality score shall exceed 85% on a human-reviewed eval set of 200 tickets sampled from the last 90 days of production data.</div>
+        <div class="crit-note">Quality score = passes the 4-part checklist: who affected + what broke + urgency signal + current state, all present in ≤20 words.</div>
+      </div>
+      <div class="crit-box">
+        <div class="crit-label">Criterion 2 — Related ticket mapping</div>
+        <div class="crit-val">Related ticket accuracy shall exceed 80% on the same eval set, where accuracy = at least 3 of 5 linked tickets share a verified root cause or component with the primary ticket.</div>
+        <div class="crit-note">This is the most important failure mode: a wrong mapping is worse than a weak summary because it sends the engineer in the wrong direction.</div>
+      </div>
+      <div class="crit-box">
+        <div class="crit-label">Criterion 3 — Failure handling</div>
+        <div class="crit-val">Word count compliance shall be 100%: any summary outside 10–22 words is flagged and held from the dashboard pending review. Schema compliance (ticket_id + summary + related_ids present) shall be 100% per run.</div>
+        <div class="crit-note">These are programmatically checkable — no human eval needed. They are your safety net before summaries reach users.</div>
+      </div>
+
+      <div class="field-row" style="margin-top:8px">
+        <div class="field-label">Human oversight</div>
+        <div class="field-val">
+          <span class="pill p-amber">Exception-based</span>
+          <div class="body" style="margin-top:4px">Not Post-hoc. Post-hoc means AI acts and humans audit later — risky for trust. Exception-based means: summaries that pass schema and word count checks are auto-published; those that fail are held for human review. A 10% random sample is audited weekly to catch quality drift before users notice it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="sh-num">6</div>
+      <div class="sh-title">Open questions before proceeding</div>
+    </div>
+    <div class="card">
+      <div class="change-row" style="margin-bottom:12px">
+        <div style="flex:1">
+          <div class="tag-before">Your 3 questions</div>
+          <div class="before">1. Output format (only know 15–20 words)<br>2. Multiple tickets mapping to generic tickets<br>3. What type of data are we looking at?</div>
+        </div>
+        <div class="arrow">→</div>
+        <div style="flex:1">
+          <div class="tag-after">Refined — sharper, decision-changing</div>
+          <div class="after">Good instincts. Sharpened to be genuinely decision-changing per the module brief.</div>
+        </div>
+      </div>
+
+      <div class="open-q">
+        <div class="q-num">Q1</div>
+        <div style="flex:1">
+          <div class="field-val">Who creates the eval dataset, and how long will it take?</div>
+          <div class="q-why">If no one owns this task, the "90% accuracy" goal is unmeasurable and the build cannot be validated. This is the highest-risk unknown — it could delay the entire project.</div>
+        </div>
+      </div>
+      <div class="open-q">
+        <div class="q-num">Q2</div>
+        <div style="flex:1">
+          <div class="field-val">How are "top 80 tickets of the day" selected — by volume, priority, recency, or a combination?</div>
+          <div class="q-why">This is an upstream dependency. If the selection logic changes, the summary pipeline's input distribution changes, which can break accuracy benchmarks. The pipeline's scope boundary explicitly excludes this — but someone must own it.</div>
+        </div>
+      </div>
+      <div class="open-q">
+        <div class="q-num">Q3</div>
+        <div style="flex:1">
+          <div class="field-val">What is the acceptable false-positive rate for related ticket linking — and who judges "related"?</div>
+          <div class="q-why">Your instinct about "multiple tickets mapping to generic tickets" is correct. Some tickets (e.g. Outage + Account) will attract dozens of weak links. Without a human-defined threshold for what counts as a valid link, the eval set cannot be labelled and the 80% mapping accuracy criterion cannot be measured.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
