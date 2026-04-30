@@ -1,0 +1,4 @@
+Evaluations needs to be started with Prompt engineering to understand what type of summary is needed, then feed it to the llm such that 
+it makes the changes and identify patterns in the summary, creating human evaluations here is difficult but the problem is how do we identify 
+if it is hallucinating. 
+So creating a 200 tickets dataset is a problem , we can start with 10 first 
