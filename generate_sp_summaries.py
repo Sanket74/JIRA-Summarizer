@@ -11,7 +11,7 @@ ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
-API_KEY = "AIzaSyAoJEnlcaHHwjaTFSUS5rOEBmK0m9compI" # From Linkedin-PM-Engine/.env
+" # From Linkedin-PM-Engine/.env
 URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={API_KEY}"
 
 SYSTEM_PROMPT = """You are a support ticket text compressor.
