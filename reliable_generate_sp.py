@@ -10,7 +10,16 @@ ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
-API_KEY = "AIzaSyAoJEnlcaHHwjaTFSUS5rOEBmK0m9compI"
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+API_KEY = os.environ.get("GEMINI_API_KEY", "")
+
+if not API_KEY:
+    print("Error: GEMINI_API_KEY environment variable not found. Please set it in a .env file.")
+    exit(1)
+
 URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={API_KEY}"
 
 SYSTEM_PROMPT = """You are a support ticket text compressor.
@@ -28,7 +37,8 @@ Your task is to **rewrite the input into a shorter version**, not summarize it.
 * **Do not introduce new information**
 * **Do not infer causes unless explicitly stated**
 * Keep meaning **exactly the same as input**
-* Avoid prefixes like “Customer…”
+* Avoid prefixes like "Customer…", "Dear…", "I am…", "We are…"
+* Output must **open with a noun** — the specific system, tool, or issue name
 * Output should feel like a **trimmed version of the original sentence**
 
 ---
@@ -37,6 +47,7 @@ Your task is to **rewrite the input into a shorter version**, not summarize it.
 
 * If the output contains **words not present in the input**, regenerate the answer
 * If output exceeds **20 words or is below 15 words**, regenerate
+* If output opens with a verb or pronoun (I, We, Reaching, Seeking, Formally, Kindly), regenerate
 
 ---
 
@@ -48,7 +59,7 @@ Input:
 A data breach in hospital systems has been detected, indicating potential security vulnerabilities due to outdated software. Despite updating software, reviewing user access, and engaging security experts, the issues persist. Immediate assistance is required to resolve this and ensure the security of patient medical data.
 
 Output:
-A data breach detected in hospital systems; issues persist despite updates and audits, requiring immediate assistance to secure patient data.
+Data breach detected in hospital systems; issues persist despite updates and audits, requiring immediate assistance to secure patient data.
 
 ---
 
@@ -58,7 +69,7 @@ Input:
 Dear customer support, I am reaching out for detailed guidance on how to integrate SendGrid into our project management SaaS. We are keen on utilizing SendGrid's email services to enhance our communication capabilities.
 
 Output:
-Guidance requested on integrating SendGrid into project management SaaS to utilize email services and improve communication capabilities.
+SendGrid integration guidance requested for project management SaaS to utilize email services and improve communication capabilities.
 
 ---
 
@@ -68,7 +79,7 @@ Input:
 I am formally requesting to swap the product I recently bought, as it is causing problems that directly affect the operation of the SaaS platform.
 
 Output:
-Requesting to swap recently bought product causing problems that directly affect operation of the SaaS platform.
+Product swap requested for recently bought item causing problems that directly affect SaaS platform operation.
 """
 
 def get_word_count(text):
@@ -115,12 +126,15 @@ def generate_summary(body, row_idx):
                 text = text.replace('**', '').replace('"', '').replace('Output:', '').strip()
                 
                 word_count = get_word_count(text)
-                if 15 <= word_count <= 20:
+                first_word = text.split()[0].lower() if text else ""
+                forbidden_starts = ['i', 'we', 'reaching', 'seeking', 'formally', 'kindly', 'dear', 'customer', 'requesting', 'guidance']
+                
+                if 15 <= word_count <= 20 and first_word not in forbidden_starts:
                     return text
                 else:
-                    print(f"[{row_idx}] Attempt {attempt}: Word count constraint violated ({word_count} words). Retrying...", flush=True)
+                    print(f"[{row_idx}] Attempt {attempt}: Constraint violated ({word_count} words, starts with: '{first_word}'). Retrying...", flush=True)
                     data["generationConfig"]["temperature"] = min(0.9, data["generationConfig"]["temperature"] + 0.15)
-                    time.sleep(4) # Respect rate limits even on word count failures
+                    time.sleep(15) # Strict pacing even on retries
         except urllib.error.HTTPError as e:
             if e.code in (429, 503):
                 print(f"[{row_idx}] Rate limited ({e.code}). Backing off for 30 seconds...", flush=True)
@@ -146,15 +160,15 @@ def process_csv():
     for i, row in enumerate(rows):
         # Resume logic: Skip if it already has a valid summary format
         current_summary = row.get('sp_summary', '')
-        # The old format used em dashes extensively. We check if it's the new format
         if is_valid_summary(current_summary):
             print(f"Skipping row {i+1}/{len(rows)} (already valid)", flush=True)
             continue
             
         print(f"Processing row {i+1}/{len(rows)}...", flush=True)
         
-        # Ensure we wait 4 seconds per API call to stay under 15 RPM
-        time.sleep(4)
+        # STRICT PACING: 15 seconds guarantees max 4 Requests Per Minute. 
+        # This prevents the severe 429 penalty cooldowns which take minutes to resolve.
+        time.sleep(15)
         
         summary = generate_summary(row['body'], i+1)
         row['sp_summary'] = summary
