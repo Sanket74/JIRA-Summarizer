@@ -1,0 +1,347 @@
+
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap');
+  :root{
+    --navy:#0F1923;--navy2:#162230;--navy3:#1E2F40;--navy4:#253748;
+    --accent:#F4A261;--green:#2ECC8A;--green-bg:#0D2E1F;--green-border:#1A5C3A;
+    --amber:#F4C542;--amber-bg:#2E2108;--red:#E25B5B;--red-bg:#2E0F0F;
+    --blue:#5BA4E8;--ice:#C8DCF0;--purple:#A78BFA;
+    --text:#E8F0F8;--text2:#8BAEC8;--text3:#5C7A94;
+    --border:rgba(200,220,240,0.1);--border2:rgba(200,220,240,0.18);
+    --mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;
+  }
+  body{background:var(--navy);color:var(--text);font-family:var(--sans);font-size:13px;padding:1.25rem;line-height:1.6}
+  h1{font-size:1.25rem;font-weight:600;margin-bottom:2px}
+  .sub{font-size:11px;color:var(--text3);font-family:var(--mono);letter-spacing:0.06em;margin-bottom:1.25rem}
+
+  /* Flow diagram */
+  .flow{display:flex;align-items:stretch;gap:0;margin-bottom:1.25rem;overflow-x:auto;padding-bottom:4px}
+  .flow-step{background:var(--navy2);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;min-width:130px;flex:1;position:relative}
+  .flow-arrow{display:flex;align-items:center;padding:0 4px;color:var(--text3);font-size:14px;flex-shrink:0}
+  .flow-num{font-size:9px;font-family:var(--mono);color:var(--text3);letter-spacing:0.08em;margin-bottom:3px;text-transform:uppercase}
+  .flow-title{font-size:12px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:3px}
+  .flow-sub{font-size:10px;color:var(--text3);line-height:1.4}
+  .flow-badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:3px;font-family:var(--mono);margin-top:5px}
+  .fb-live{background:rgba(46,204,138,0.12);color:var(--green);border:1px solid var(--green-border)}
+  .fb-test{background:rgba(244,162,97,0.1);color:var(--accent);border:1px solid rgba(244,162,97,0.2)}
+  .fb-both{background:rgba(91,164,232,0.1);color:var(--blue);border:1px solid rgba(91,164,232,0.2)}
+
+  /* Steps */
+  .step{background:var(--navy2);border:1px solid var(--border2);border-radius:12px;margin-bottom:8px;overflow:hidden}
+  .step-header{padding:11px 14px;display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+  .step-header:hover{background:var(--navy3)}
+  .step-num{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;font-family:var(--mono)}
+  .step-meta{flex:1}
+  .step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+  .step-sub{font-size:11px;color:var(--text3);margin-bottom:5px}
+  .badges{display:flex;gap:4px;flex-wrap:wrap}
+  .badge{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500;font-family:var(--mono)}
+  .b-blue{background:rgba(91,164,232,0.12);color:var(--blue);border:1px solid rgba(91,164,232,0.2)}
+  .b-green{background:rgba(46,204,138,0.1);color:var(--green);border:1px solid var(--green-border)}
+  .b-amber{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(244,197,66,0.25)}
+  .b-red{background:var(--red-bg);color:var(--red);border:1px solid rgba(226,91,91,0.3)}
+  .b-gray{background:var(--navy3);color:var(--text3);border:1px solid var(--border)}
+  .b-purple{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.2)}
+  .chevron{font-size:11px;color:var(--text3);transition:transform 0.2s;margin-left:auto;flex-shrink:0;margin-top:3px}
+  .chevron.open{transform:rotate(90deg)}
+  .step-body{padding:0 14px 14px;display:none}
+  .step-body.open{display:block}
+
+  .what-box{background:var(--navy3);border-radius:8px;padding:10px 12px;margin-bottom:10px}
+  .wl{font-size:9px;font-family:var(--mono);letter-spacing:0.1em;color:var(--text3);text-transform:uppercase;margin-bottom:4px}
+  .wt{font-size:12px;color:var(--text2);line-height:1.7}
+
+  .two-mode{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+  .mode-box{border-radius:8px;padding:10px 12px}
+  .mode-live{background:var(--green-bg);border:1px solid var(--green-border)}
+  .mode-test{background:var(--amber-bg);border:1px solid rgba(244,197,66,0.25)}
+  .mode-label{font-size:9px;font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px}
+  .ml-live{color:var(--green)}
+  .ml-test{color:var(--amber)}
+  .mode-text{font-size:11px;color:var(--text2);line-height:1.7}
+  .mode-text code{font-family:var(--mono);font-size:10px;background:var(--navy4);padding:1px 4px;border-radius:3px;color:var(--ice)}
+
+  .task-row{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+  .task-row:last-child{border-bottom:none}
+  .td{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px}
+  .tt{color:var(--text2);flex:1;line-height:1.6}
+  .tt code{font-family:var(--mono);font-size:10px;background:var(--navy4);padding:1px 5px;border-radius:3px;color:var(--ice)}
+
+  .io-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .io-box{background:var(--navy4);border-radius:7px;padding:9px 11px}
+  .io-label{font-size:9px;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:4px;text-transform:uppercase}
+  .io-in{color:var(--blue)} .io-out{color:var(--green)}
+  .io-text{font-size:11px;color:var(--text2);font-family:var(--mono);line-height:1.8}
+
+  .gate-box{background:var(--green-bg);border:1px solid var(--green-border);border-radius:8px;padding:9px 12px;margin-top:8px}
+  .gate-text{font-size:11px;color:var(--green);line-height:1.6}
+  .warn-box{background:var(--amber-bg);border:1px solid rgba(244,197,66,0.25);border-radius:8px;padding:9px 12px;margin-top:8px}
+  .warn-text{font-size:11px;color:var(--amber);line-height:1.6}
+
+  /* Scale box */
+  .scale-note{background:var(--navy2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+  .scale-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px}
+  .scale-row{display:flex;gap:10px;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px}
+  .scale-row:last-child{border-bottom:none}
+  .scale-label{min-width:90px;font-size:11px;color:var(--text3);font-family:var(--mono)}
+  .scale-val{color:var(--text2);flex:1;line-height:1.5}
+
+  /* Summary */
+  .sum-bar{display:flex;gap:0;background:var(--navy2);border:1px solid var(--border2);border-radius:12px;overflow:hidden;margin-top:10px}
+  .sum-item{flex:1;padding:12px 14px;border-right:1px solid var(--border);text-align:center}
+  .sum-item:last-child{border-right:none}
+  .sum-num{font-size:1.3rem;font-weight:600;font-family:var(--mono)}
+  .sum-label{font-size:10px;color:var(--text3);font-family:var(--mono);letter-spacing:0.05em;margin-top:2px}
+</style>
+
+<div>
+  <h1>Sub-problem A — Full Pipeline Plan</h1>
+  <div class="sub">PHASE 2 · WHAT YOU HAVE + WHAT GETS BUILT · END-TO-END</div>
+
+  <!-- Flow diagram -->
+  <div class="flow">
+    <div class="flow-step" style="border-color:rgba(46,204,138,0.3)">
+      <div class="flow-num">source</div>
+      <div class="flow-title">Ticket source</div>
+      <div class="flow-sub">Live Jira API or sample dataset</div>
+      <span class="flow-badge fb-live">LIVE: Jira API</span>
+      <span class="flow-badge fb-test">TEST: CSV + timestamp</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="border-color:rgba(167,139,250,0.3)">
+      <div class="flow-num">step 1</div>
+      <div class="flow-title">Fetch top 80</div>
+      <div class="flow-sub">By priority + recency</div>
+      <span class="flow-badge fb-both">NEW BUILD</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="border-color:rgba(244,162,97,0.3)">
+      <div class="flow-num">step 2</div>
+      <div class="flow-title">Generate summaries</div>
+      <div class="flow-sub">Your working prompt × 80</div>
+      <span class="flow-badge fb-both">YOU HAVE THIS ✓</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="border-color:rgba(91,164,232,0.3)">
+      <div class="flow-num">step 3</div>
+      <div class="flow-title">Validate output</div>
+      <div class="flow-sub">Word count + schema</div>
+      <span class="flow-badge fb-both">NEW BUILD</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="border-color:rgba(46,204,138,0.3)">
+      <div class="flow-num">step 4</div>
+      <div class="flow-title">Find 5 related</div>
+      <div class="flow-sub">Tag intersection per ticket</div>
+      <span class="flow-badge fb-both">SUB-PROBLEM B</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="border-color:rgba(46,204,138,0.3)">
+      <div class="flow-num">step 5</div>
+      <div class="flow-title">Summarise 400</div>
+      <div class="flow-sub">Same prompt × 5 per primary</div>
+      <span class="flow-badge fb-both">REUSES STEP 2</span>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" style="border-color:rgba(46,204,138,0.3)">
+      <div class="flow-num">output</div>
+      <div class="flow-title">Dashboard JSON</div>
+      <div class="flow-sub">480 summaries structured</div>
+      <span class="flow-badge fb-both">PHASE 3</span>
+    </div>
+  </div>
+
+  <!-- What you already have -->
+  <div class="scale-note">
+    <div class="scale-title">📦 What you already have — carry forward</div>
+    <div class="scale-row">
+      <div class="scale-label">200 eval tickets</div>
+      <div class="scale-val">Human labels + system prompt. This is your test harness for every build step below. Never rebuild this.</div>
+    </div>
+    <div class="scale-row">
+      <div class="scale-label">Working prompt</div>
+      <div class="scale-val">Produces ≥85% quality on eval set. Becomes the core of Step 2 and Step 5. Use as-is until scoring shows regression.</div>
+    </div>
+    <div class="scale-row">
+      <div class="scale-label">Labelling tool</div>
+      <div class="scale-val">Reusable for any new eval batches. Also use for false-positive logging in Sub-problem B.</div>
+    </div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num" style="background:rgba(167,139,250,0.12);color:var(--purple)">1</div>
+      <div class="step-meta">
+        <div class="step-title">Ticket fetcher — top 80 selection</div>
+        <div class="step-sub">The gatekeeper — decides which 80 tickets enter the pipeline each run</div>
+        <div class="badges">
+          <span class="badge b-purple">NEW</span>
+          <span class="badge b-gray">1 day</span>
+          <span class="badge b-green">No blocker</span>
+        </div>
+      </div>
+      <div class="chevron">▶</div>
+    </div>
+    <div class="step-body">
+      <div class="what-box">
+        <div class="wl">What this does</div>
+        <div class="wt">Produces a ranked list of the top 80 tickets every time the pipeline runs. In production it calls the Jira API. In testing it reads the sample dataset and simulates "today's tickets" using a timestamp window. Same interface either way — the rest of the pipeline doesn't know the difference.</div>
+      </div>
+      <div class="two-mode">
+        <div class="mode-box mode-live">
+          <div class="mode-label ml-live">PRODUCTION MODE — Live Jira</div>
+          <div class="mode-text">
+            Call Jira REST API<br>
+            Filter: <code>status != Done</code><br>
+            Filter: <code>updated >= 24h ago</code><br>
+            Sort: <code>priority DESC, updated DESC</code><br>
+            Return top 80 ticket IDs + fields
+          </div>
+        </div>
+        <div class="mode-box mode-test">
+          <div class="mode-label ml-test">TEST MODE — Sample dataset</div>
+          <div class="mode-text">
+            Read 10k CSV dataset<br>
+            Simulate "today" = <code>run_date</code> param<br>
+            Filter by <code>created_date</code> window<br>
+            Sort: <code>priority DESC</code><br>
+            Return top 80 from that window
+          </div>
+        </div>
+      </div>
+      <div class="wl" style="margin-bottom:6px">Ranking logic (both modes)</div>
+      <div class="task-row"><div class="td"></div><div class="tt">Priority score: critical=4, high=3, medium=2, low=1</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Recency score: updated/created in last 24h gets +1 boost</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Sort by combined score DESC, take top 80</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Config flag: <code>mode=live|test</code> and <code>run_date=YYYY-MM-DD</code> (test only)</div></div>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label io-in">Input</div><div class="io-text">Jira API creds OR\nCSV path + run_date</div></div>
+        <div class="io-box"><div class="io-label io-out">Output</div><div class="io-text">top80.json\n[{ticket_id, subject,\nbody, priority,\nqueue, tags[]}]</div></div>
+      </div>
+      <div class="warn-box"><div class="warn-text">⚠ Decision needed: confirm the ranking logic (priority + recency) with your support lead before building. If they have a different definition of "top 80" — e.g. by comment activity or unresolved age — this logic changes.</div></div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num" style="background:rgba(244,162,97,0.12);color:var(--accent)">2</div>
+      <div class="step-meta">
+        <div class="step-title">Batch summariser — 80 primary summaries</div>
+        <div class="step-sub">Your working prompt wrapped in a loop with validation and retry</div>
+        <div class="badges">
+          <span class="badge b-amber">YOU HAVE THE PROMPT ✓</span>
+          <span class="badge b-gray">2 days</span>
+        </div>
+      </div>
+      <div class="chevron">▶</div>
+    </div>
+    <div class="step-body">
+      <div class="what-box">
+        <div class="wl">What this does</div>
+        <div class="wt">Takes the 80 tickets from Step 1. Feeds each one through your existing prompt. Collects outputs. Runs validation on each. Separates passed vs held. Produces a structured JSON. The prompt itself is unchanged — this just industrialises it.</div>
+      </div>
+      <div class="task-row"><div class="td"></div><div class="tt">Loop through top80.json, call LLM with your system prompt + ticket body per iteration</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Validate each output: word count 10–22, schema fields present (<code>ticket_id, summary, word_count</code>)</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Retry logic: if validation fails, retry once with a stricter length instruction appended. If still fails, move to held queue.</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Rate limiting + exponential backoff on API errors. Max 3 retries per ticket.</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Cost logging: token count per ticket, total batch tokens, estimated cost per run.</div></div>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label io-in">Input</div><div class="io-text">top80.json from Step 1</div></div>
+        <div class="io-box"><div class="io-label io-out">Output</div><div class="io-text">primary_summaries.json\n(passed + held split)\ndaily_cost_log.csv</div></div>
+      </div>
+      <div class="gate-box"><div class="gate-text">✓ Acceptance: held rate &lt;5% on a normal run. If held rate &gt;10% two runs in a row — the prompt has drifted against live data distribution. Flag for investigation before continuing.</div></div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num" style="background:rgba(46,204,138,0.1);color:var(--green)">3</div>
+      <div class="step-meta">
+        <div class="step-title">Related ticket summariser — 400 summaries</div>
+        <div class="step-sub">Same prompt, different input — runs after Sub-problem B delivers related ticket IDs</div>
+        <div class="badges">
+          <span class="badge b-red">Needs Sub-problem B output first</span>
+          <span class="badge b-gray">1 day</span>
+        </div>
+      </div>
+      <div class="chevron">▶</div>
+    </div>
+    <div class="step-body">
+      <div class="what-box">
+        <div class="wl">What this does</div>
+        <div class="wt">For each of the 80 primary tickets, Sub-problem B will return 5 related ticket IDs. This step fetches the body of each related ticket and runs it through the same prompt — but with one addition: the summary must also state why it is related to the primary ticket. That link reasoning is the extra requirement for related summaries vs primary summaries.</div>
+      </div>
+      <div class="task-row"><div class="td"></div><div class="tt">Take related_tickets.json from Sub-problem B — 80 × 5 = 400 ticket ID pairs</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Fetch body of each related ticket from dataset or Jira API</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Modified prompt: same 15–20 word rule + append "state why this is related to [primary ticket subject]" instruction</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Same validation and retry logic as Step 2</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Output pairs each related summary with its primary ticket ID for dashboard linking</div></div>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label io-in">Input</div><div class="io-text">related_tickets.json\n(from Sub-problem B)\ndataset or Jira API</div></div>
+        <div class="io-box"><div class="io-label io-out">Output</div><div class="io-text">related_summaries.json\n{primary_id,\nrelated_id, summary,\nlink_reason}</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num" style="background:rgba(91,164,232,0.12);color:var(--blue)">4</div>
+      <div class="step-meta">
+        <div class="step-title">Eval set scoring — integrated</div>
+        <div class="step-sub">Run anytime — tells you instantly if a change broke your 85% score</div>
+        <div class="badges">
+          <span class="badge b-blue">Gate to Phase 3</span>
+          <span class="badge b-gray">1 day</span>
+        </div>
+      </div>
+      <div class="chevron">▶</div>
+    </div>
+    <div class="step-body">
+      <div class="what-box">
+        <div class="wl">What this does</div>
+        <div class="wt">Runs your batch summariser (Step 2) on the 200-ticket eval set instead of the live top-80. Compares AI output against human labels. Prints a scorecard. Saves a score history. One command — run it every time you change anything about the prompt or the pipeline.</div>
+      </div>
+      <div class="task-row"><div class="td"></div><div class="tt">Run Step 2 with <code>mode=eval</code> — uses eval set as input instead of top80</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Compare each output against human label on 4-part rubric: who / what / urgency / status</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Print scorecard: overall %, per-dimension %, word count compliance %, held rate %</div></div>
+      <div class="task-row"><div class="td"></div><div class="tt">Append to <code>eval_scores_log.csv</code>: date, prompt version, all scores. Trend visible over time.</div></div>
+      <div class="io-grid">
+        <div class="io-box"><div class="io-label io-in">Input</div><div class="io-text">eval_labels.json (200)\nyour prompt version</div></div>
+        <div class="io-box"><div class="io-label io-out">Output</div><div class="io-text">scorecard printed\neval_scores_log.csv\nupdated</div></div>
+      </div>
+      <div class="gate-box"><div class="gate-text">✓ Phase 3 gate: overall ≥85% + word count compliance 100% + held rate &lt;5%. All three must pass on a full eval run before dashboard build begins.</div></div>
+    </div>
+  </div>
+
+  <!-- Scale note -->
+  <div class="scale-note" style="margin-top:4px">
+    <div class="scale-title">Daily run at scale — what the full pipeline produces</div>
+    <div class="scale-row"><div class="scale-label">Step 1 output</div><div class="scale-val">80 tickets fetched from Jira (live) or by timestamp window (test)</div></div>
+    <div class="scale-row"><div class="scale-label">Step 2 output</div><div class="scale-val">80 primary summaries validated → passed to dashboard</div></div>
+    <div class="scale-row"><div class="scale-label">Sub-problem B</div><div class="scale-val">80 × 5 = 400 related ticket IDs found via tag intersection</div></div>
+    <div class="scale-row"><div class="scale-label">Step 3 output</div><div class="scale-val">400 related summaries + link reason → paired with primary IDs</div></div>
+    <div class="scale-row"><div class="scale-label">Total LLM calls</div><div class="scale-val">480 per daily run (80 primary + 400 related)</div></div>
+    <div class="scale-row"><div class="scale-label">Final output</div><div class="scale-val">One structured JSON per day → feeds Phase 3 dashboard</div></div>
+  </div>
+
+  <div class="sum-bar">
+    <div class="sum-item"><div class="sum-num" style="color:var(--purple)">4</div><div class="sum-label">STEPS</div></div>
+    <div class="sum-item"><div class="sum-num" style="color:var(--accent)">~5 days</div><div class="sum-label">BUILD TIME</div></div>
+    <div class="sum-item"><div class="sum-num" style="color:var(--green)">480</div><div class="sum-label">LLM CALLS/DAY</div></div>
+    <div class="sum-item"><div class="sum-num" style="color:var(--blue)">85%+</div><div class="sum-label">PHASE 3 GATE</div></div>
+    <div class="sum-item"><div class="sum-num" style="color:var(--amber)">1</div><div class="sum-label">DECISION NEEDED</div></div>
+  </div>
+</div>
+
+<script>
+function toggle(h){
+  const b=h.nextElementSibling,c=h.querySelector('.chevron');
+  const o=b.classList.contains('open');
+  b.classList.toggle('open',!o);c.classList.toggle('open',!o);
+}
+</script>
